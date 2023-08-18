@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Ranking</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+  }
+</style>
+</head>
+<body>
+  <h1>Movie Ranking</h1>
+  
+  <button id="rankButton">Rank New Movie</button>
+  <button id="viewButton">View Movie List</button>
+
+  <script>
+    // JavaScript code for button actions
+    const rankButton = document.getElementById("rankButton");
+    rankButton.addEventListener("click", () => {
+        window.open("ranknew.html", "_blank");
+    });
+  </script>
+</body>
+</html>

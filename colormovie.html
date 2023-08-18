@@ -1,0 +1,92 @@
+<!-- colormovie.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Rating</title>
+<style>
+  /* Your CSS styles here */
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+  .container {
+    text-align: center;
+  }
+  .btn {
+    padding: 20px 40px;
+    font-size: 18px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+  .btn-green {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .btn-yellow {
+    background-color: #FFC107;
+    color: black;
+  }
+  .btn-red {
+    background-color: #F44336;
+    color: white;
+  }
+  .btn:hover {
+    filter: brightness(110%);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>How did you like <span id="movieName"></span>?</h1>
+    
+    <button id="awesomeButton" class="btn btn-green">It was awesome!</button>
+    <button id="fineButton" class="btn btn-yellow">It was fine</button>
+    <button id="badButton" class="btn btn-red">It was bad</button>
+  </div>
+
+  <script>
+    // JavaScript code for button actions
+    const movieNameSpan = document.getElementById("movieName");
+    const awesomeButton = document.getElementById("awesomeButton");
+    const fineButton = document.getElementById("fineButton");
+    const badButton = document.getElementById("badButton");
+
+    // Get the movie name from the query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieName = urlParams.get("movie");
+    movieNameSpan.textContent = `"${movieName}"`;
+
+    // Handle button clicks
+    awesomeButton.addEventListener("click", () => {
+      // Handle "It was awesome!" option
+      // You can add your code here
+      // Redirect back to the main page
+      window.location.href = "rankmovie.html"; // Change to your main page's filename
+    });
+
+    fineButton.addEventListener("click", () => {
+      // Handle "It was fine" option
+      // You can add your code here
+      // Redirect back to the main page
+      window.location.href = "rankmovie.html"; // Change to your main page's filename
+    });
+
+    badButton.addEventListener("click", () => {
+      // Handle "It was bad" option
+      // You can add your code here
+      // Redirect back to the main page
+      window.location.href = "rankmovie.html"; // Change to your main page's filename
+    });
+  </script>
+</body>
+</html>
