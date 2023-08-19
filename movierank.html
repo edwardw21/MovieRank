@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Movie Ranking</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-  }
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 10px;
-  }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+    }
 </style>
 </head>
 <body>
@@ -27,9 +27,18 @@
   <script>
     // JavaScript code for button actions
     const rankButton = document.getElementById("rankButton");
+    const viewButton = document.getElementById("viewButton");
+
     rankButton.addEventListener("click", () => {
-        window.open("ranknew.html", "_blank");
+        window.location.href = "ranknew.html";
+    });
+
+    viewButton.addEventListener("click", () => {
+        window.location.href = "movielist.html";
     });
   </script>
+  
 </body>
 </html>
+
+

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranked Movie List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #444;
+      text-align: center;
+    }
+    #rankedList {
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .green {
+      background-color: #12853f; /* Darker green */
+      color: white;
+    }
+    .yellow {
+      background-color: #d4ac0d; /* Darker yellow */
+      color: white;
+    }
+    .red {
+      background-color: #b80c09; /* Darker red */
+      color: white;
+    }
+    .value {
+      color: black;
+      text-align: right;
+      min-width: 30px;
+    }
+    #goBackButton {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #goBackButton:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ranked Movie List</h1>
+  
+  <div id="rankedList"></div>
+  <button id="goBackButton">Back</button>
+  <script>
+    const rankedList = document.getElementById("rankedList");
+    function displayRankedMovies() {
+        fetch('http://127.0.0.1:5500/movies.json') // Use the local server URL
+            .then(response => response.json())
+            .then(data => {
+            const allMovies = [].concat(data.green, data.yellow, data.red);
+            const sortedMovies = allMovies.sort((a, b) => {
+                if (a.color !== b.color) {
+                return getColorOrder(a.color) - getColorOrder(b.color);
+                } else {
+                return a.rank - b.rank;
+                }
+            });
+
+            const movieList = sortedMovies.map(movie => {
+                const colorClass = getColorClass(movie.color);
+                let maxRank = 10;
+                if (colorClass === "red") {
+                maxRank = 10 / 3;
+                } else if (colorClass === "yellow") {
+                maxRank = 20 / 3;
+                }
+                const value = (maxRank - (10 / 3) * (movie.rank - 1) / data.green.length).toFixed(1);
+                return `<li class="${colorClass}">${movie.name} <span class="value">${value}</span></li>`;
+            });
+
+            rankedList.innerHTML = "<ul>" + movieList.join("") + "</ul>";
+            })
+            .catch(error => {
+            console.error('Error fetching movie data:', error);
+            rankedList.innerHTML = '<p>Error fetching movie data.</p>';
+            });
+    }
+
+    function getColorOrder(color) {
+    switch (color) {
+        case "green":
+        return 1;
+        case "yellow":
+        return 2;
+        case "red":
+        return 3;
+        default:
+        return 0;
+    }
+    }
+
+
+    function getColorClass(color) {
+      switch (color) {
+        case "green":
+          return "green";
+        case "yellow":
+          return "yellow";
+        case "red":
+          return "red";
+        default:
+          return "";
+      }
+    }
+
+    displayRankedMovies();
+
+    const goBackButton = document.getElementById("goBackButton");
+    goBackButton.addEventListener("click", () => {
+      window.location.href = "movierank.html";
+    });
+
+  </script>
+</body>
+</html>

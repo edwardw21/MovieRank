@@ -50,8 +50,8 @@
     <h1>How did you like <span id="movieName"></span>?</h1>
     
     <button id="awesomeButton" class="btn btn-green">It was awesome!</button>
-    <button id="fineButton" class="btn btn-yellow">It was fine</button>
-    <button id="badButton" class="btn btn-red">It was bad</button>
+    <button id="fineButton" class="btn btn-yellow">It was fine.</button>
+    <button id="badButton" class="btn btn-red">It was bad ☹️</button>
   </div>
 
   <script>
@@ -70,22 +70,39 @@
     awesomeButton.addEventListener("click", () => {
       // Handle "It was awesome!" option
       // You can add your code here
-      // Redirect back to the main page
-      window.location.href = "rankmovie.html"; // Change to your main page's filename
+      
+      // Fetch the movies.json data
+      fetch('http://127.0.0.1:5500/movies.json') // Use the local server URL
+        .then(response => response.json())
+        .then(data => {
+          // Get the number of green movies from movies.json
+          const numGreenMovies = data.green.length;
+
+          // Initialize loValue and hiValue
+          let loValue = 0;
+          let hiValue = numGreenMovies;
+
+          // Redirect to greencomparison.html with multiple parameters
+          const queryParams = `movie=${encodeURIComponent(movieName)}&lo=${loValue}&hi=${hiValue}`;
+          window.location.href = `greencomparison.html?${queryParams}`;
+        })
+        .catch(error => {
+          console.error('Error fetching movie data:', error);
+        });
     });
 
     fineButton.addEventListener("click", () => {
       // Handle "It was fine" option
       // You can add your code here
       // Redirect back to the main page
-      window.location.href = "rankmovie.html"; // Change to your main page's filename
+      window.location.href = "movierank.html"; // Change to your main page's filename
     });
 
     badButton.addEventListener("click", () => {
       // Handle "It was bad" option
       // You can add your code here
       // Redirect back to the main page
-      window.location.href = "rankmovie.html"; // Change to your main page's filename
+      window.location.href = "movierank.html"; // Change to your main page's filename
     });
   </script>
 </body>

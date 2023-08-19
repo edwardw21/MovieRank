@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Green Movie Comparison</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+      color: #333;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #444;
+    }
+    #buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .button {
+      flex: 1;
+      padding: 20px 40px;
+      font-size: 18px;
+      margin: 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+      background-color: #4CAF50;
+      color: white;
+      width: 45%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Which movie is better?</h1>
+  
+  <div id="buttons">
+    <button id="movieButton" class="button"></button>
+    <button id="firstGreenButton" class="button"></button>
+  </div>
+
+  <script>
+    const movieButton = document.getElementById("movieButton");
+    const firstGreenButton = document.getElementById("firstGreenButton");
+
+    // Get the movie name from the query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieName = urlParams.get("movie");
+    const loValue = parseInt(urlParams.get("lo"));
+    const hiValue = parseInt(urlParams.get("hi"));
+
+    // Set button labels
+    movieButton.textContent = `${movieName}`;
+    const middleIndex = Math.floor((loValue + hiValue) / 2);
+    let greenMovies = [];
+    let yellowMovies = [];
+    let redMovies = [];
+    
+    // Fetch movies.json data and set first green button text
+    fetch('http://127.0.0.1:5500/movies.json') // Use the local server URL
+      .then(response => response.json())
+      .then(data => {
+        // Get the green movies
+        greenMovies = data.green;
+        yellowMovies = data.yellow;
+        redMovies = data.red;
+
+        // Calculate the index of the middle green movie
+
+        // Set the text content of the first green button
+        firstGreenButton.textContent = greenMovies[middleIndex].name;
+      })
+      .catch(error => {
+        console.error('Error fetching movie data:', error);
+      });
+
+    // Handle button clicks
+    movieButton.addEventListener("click", () => {
+        // Handle movie button click
+        // You can add your code here
+        // Redirect back to the main page
+        let newLoValue = loValue;
+        let newHighValue = middleIndex;
+        if (newLoValue !== newHighValue) {
+            // Redirect to greencomparison.html with multiple parameters
+            const queryParams = `movie=${encodeURIComponent(movieName)}&lo=${newLoValue}&hi=${newHighValue}`;
+            window.location.href = `greencomparison.html?${queryParams}`;
+        }
+        else {
+            // Construct the new data for the movies.json file
+            const newMoviesData = {
+            green: [...greenMovies.slice(0, newLoValue), { name: movieName, rank: newLoValue, color: "green" }, ...greenMovies.slice(newLoValue)],
+            };
+
+            // Send a PUT request to the server to update the movies.json file
+            fetch('http://127.0.0.1:5500/update-movies', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newMoviesData }),
+            })
+            .then(() => {
+                console.log('New movie inserted and ranks updated.');
+                window.location.href = "movierank.html"; // Change to your main page's filename
+            })
+            .catch(error => {
+                console.error('Error updating movie data:', error);
+            });
+        }
+    });
+
+    firstGreenButton.addEventListener("click", () => {
+      // Handle first green movie button click
+      // You can add your code here
+      // Redirect back to the main page
+        let newLoValue = middleIndex + 1;
+        let newHighValue = hiValue;
+        if (newLoValue !== newHighValue) {
+            // Redirect to greencomparison.html with multiple parameters
+            const queryParams = `movie=${encodeURIComponent(movieName)}&lo=${newLoValue}&hi=${newHighValue}`;
+            window.location.href = `greencomparison.html?${queryParams}`;
+        }
+        else {
+            // Construct the new data for the movies.json file
+            const newMoviesData = {
+            green: [...greenMovies.slice(0, newLoValue), { name: movieName, rank: newLoValue, color: "green" }, ...greenMovies.slice(newLoValue)],
+            yellow: yellowMovies,
+            red: redMovies
+            };
+            console.log('Sending PUT request to server...')
+            // Send a PUT request to the server to update the movies.json file
+            fetch('http://127.0.0.1:5500/update-movies', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newMoviesData }),
+            })
+            .then(() => {
+                console.log('New movie inserted and ranks updated.');
+                window.location.href = "movierank.html"; // Change to your main page's filename
+            })
+            .catch(error => {
+                console.error('Error updating movie data:', error);
+            });
+        }
+    });
+
+  </script>
+</body>
+</html>
